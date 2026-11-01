@@ -1,5 +1,11 @@
-export interface ResponseStatus {
+export interface ResponseStatus<T = ""> {
   ok: boolean;
   msg: string;
-  data: "";
+  data: T;
 }
+
+interface LoginData {
+  accessToken: string;
+}
+
+export type ResponseIsLogin = ResponseStatus<LoginData>;

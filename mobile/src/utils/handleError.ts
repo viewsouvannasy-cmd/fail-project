@@ -8,20 +8,17 @@ export const handleAccessTokenError = async <T>(
   retry: () => Promise<T>,
 ): Promise<T> => {
   if (axios.isAxiosError(error) && error.response) {
-    console.log(error.response.data);
     if (error.response.status === 401 && !error.response.data.ok_verify_token) {
       const msg = error.response.data.msg;
 
-      if (
-        "TOKEN_EXPIRED".includes(msg) ||
-        "TOKEN_MISSING".includes(msg) ||
-        !isRetry
-      ) {
-        await fetchRefreshToken();
-        return await retry();
+      if (msg === "TOKEN_EXPIRED" || msg === "TOKEN_MISSING") {
+        if (!isRetry) {
+          await fetchRefreshToken();
+          return await retry();
+        }
       }
 
-      if ("TOKEN_INVALID".includes(msg)) {
+      if (msg === "TOKEN_INVALID") {
         router.replace("/(auth)/signup");
         throw error;
       }

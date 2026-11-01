@@ -4,7 +4,10 @@ import * as SecureStore from "expo-secure-store";
 // helper function
 import { getEnv } from "@/utils/getEnv";
 
-const isUserLogin = async () => {
+// types
+import type { ResponseIsLogin } from "@/types/data";
+
+const isUserLogin = async (): Promise<ResponseIsLogin> => {
   try {
     const clientRefreshToken = await SecureStore.getItemAsync("refreshToken");
     const res = await axios.get(
@@ -17,6 +20,7 @@ const isUserLogin = async () => {
     if (axios.isAxiosError(error) && error.response) {
       return error.response.data;
     }
+    throw error;
   }
 };
 

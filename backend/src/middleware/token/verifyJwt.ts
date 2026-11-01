@@ -24,7 +24,7 @@ const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
   if (!token || token === "null" || token === "undefined") {
     return res.status(401).json({
       ok_verify_token: false,
-      msg: "no token provided TOKEN_MISSING",
+      msg: "TOKEN_MISSING",
       data: "",
     });
   }
@@ -44,7 +44,7 @@ const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
       // console.log(error.name, error.message);
       return res.status(401).json({
         ok_verify_token: false,
-        msg: "token expired TOKEN_EXPIRED",
+        msg: "TOKEN_EXPIRED",
         data: "",
       });
     }
@@ -53,7 +53,7 @@ const verifyJwt = (req: Request, res: Response, next: NextFunction) => {
       // console.log(error.name, error.message);
       return res.status(401).json({
         ok_verify_token: false,
-        msg: "invalid token TOKEN_INVALID",
+        msg: "TOKEN_INVALID",
         data: "",
       });
     }
