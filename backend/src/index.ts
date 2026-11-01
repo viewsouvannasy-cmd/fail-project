@@ -1,5 +1,5 @@
 import { connectDB } from "./config/database.js";
-import app from "./add.js";
+import app from "./app.js";
 
 import { getEnv } from "./utils/getEnv.js";
 

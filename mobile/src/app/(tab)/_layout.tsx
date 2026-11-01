@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from "react-native";
 import { NativeTabs } from "expo-router/native-tabs";
 
 export default function _layout() {
@@ -17,5 +16,3 @@ export default function _layout() {
     </NativeTabs>
   );
 }
-
-const styles = StyleSheet.create({});
