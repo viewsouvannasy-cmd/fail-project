@@ -42,7 +42,7 @@ export interface LogoProps extends Omit<
 
 export function SamePointLogo({
   size = 120,
-  color = "#000",
+  color = "currentColor",
   accessibilityLabel = "Logo",
   ...rest
 }: LogoProps) {

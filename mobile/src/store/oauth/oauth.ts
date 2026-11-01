@@ -1,0 +1,9 @@
+import { googleRegsiter } from "./oauth-func";
+
+import { useMutation } from "@tanstack/react-query";
+
+export function useGoogleRegister() {
+  return useMutation({
+    mutationFn: googleRegsiter,
+  });
+}

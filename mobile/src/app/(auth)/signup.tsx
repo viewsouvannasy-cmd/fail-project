@@ -10,11 +10,13 @@ import {
 import { Image } from "expo-image";
 import { useState } from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // store
-import { useLoginWithGoogle } from "@/store/oath/loginWithGoogle";
+import { useGoogleRegister } from "@/store/oauth/oauth";
+
+// components
+import { SpinnerLoad } from "@/components/load-state/sipnnerLoad";
 
 // halper function
 import { SamePointLogo } from "@/components/logo/SamePointLogo";
@@ -22,15 +24,9 @@ import { SamePointLogo } from "@/components/logo/SamePointLogo";
 const Signup = () => {
   const colorScheme = useColorScheme();
 
-  const router = useRouter();
-
   const [inputEmail, setInputEmail] = useState("");
 
-  const { mutate } = useLoginWithGoogle();
-
-  function handleContineWithGoogle() {
-    mutate();
-  }
+  const { mutate, isPending } = useGoogleRegister();
 
   return (
     <SafeAreaView className="flex-1 bg-background">
@@ -43,10 +39,7 @@ const Signup = () => {
         />
         <View className="flex-1 p-4 items-center justify-center">
           <View className="items-center gap-3">
-            <SamePointLogo
-              size={85}
-              color={colorScheme === "dark" ? "#fff" : "#000"}
-            />
+            <SamePointLogo size={85} />
             <Text className="text-3xl text-foreground font-medium">
               SamePoint
             </Text>
@@ -61,12 +54,7 @@ const Signup = () => {
 
               value={inputEmail}
             />
-            <Pressable
-              onPress={() => {
-                router.push("/(auth)/set-profile");
-              }}
-              className="p-3 active:bg-background-inverse/70 bg-background-inverse rounded-[10px] items-center "
-            >
+            <Pressable className="p-3 active:bg-background-inverse/70 bg-background-inverse rounded-[10px] items-center ">
               <Text className="text-foreground-inverse text-lg">Continue</Text>
             </Pressable>
           </View>
@@ -76,16 +64,26 @@ const Signup = () => {
             <View className="bg-border flex-1 h-[1px] " />
           </View>
           <Pressable
-            onPress={handleContineWithGoogle}
-            className="p-3 flex-row active:bg-background-inverse/70 gap-2 justify-center bg-background-inverse rounded-[10px] items-center "
+            onPress={() => mutate()}
+            className="p-3 flex-row active:bg-background-inverse/70  justify-center bg-background-inverse rounded-[10px] items-center "
           >
-            <Image
-              source={require("@/assets/images/google.png")}
-              style={{ width: 17, height: 17 }}
-            />
-            <Text className="text-foreground-inverse text-lg ">
-              Continue with Google
-            </Text>
+            {!isPending ? (
+              <View className="flex flex-row items-center gap-2">
+                <Image
+                  source={require("@/assets/images/google.png")}
+                  style={{ width: 17, height: 17 }}
+                />
+                <Text className="text-foreground-inverse text-lg ">
+                  Continue with Google
+                </Text>
+              </View>
+            ) : (
+              <SpinnerLoad
+                size={24}
+                borderWidth={2}
+                color={colorScheme === "dark" ? "#000" : "#fff"}
+              />
+            )}
           </Pressable>
         </View>
       </KeyboardAwareScrollView>
