@@ -9,7 +9,7 @@ import * as SecureStore from "expo-secure-store";
 
 // helper function
 import { getEnv } from "@/utils/getEnv";
-import { getAccessToken, saveAccessToken } from "@/token/accessToken";
+import { saveAccessToken } from "@/token/accessToken";
 
 // context
 import { useUserSetProfile } from "@/context/useUserSetProfile";
@@ -21,7 +21,7 @@ GoogleSignin.configure({
   iosClientId: getEnv("EXPO_PUBLIC_GOOGLE_CLIENT_IOS_ID"),
 });
 
-const googleRegsiter = async () => {
+const googleRegister = async () => {
   try {
     await GoogleSignin.hasPlayServices();
     const resGoogle = await GoogleSignin.signIn();
@@ -41,12 +41,11 @@ const googleRegsiter = async () => {
     )) as Oauth;
 
     if (!res.data.ok) {
-      throw new Error();
+      throw new Error("Register failed: server returned ok = false");
     }
 
     if (res.data.data.isNewUser) {
       saveAccessToken(res.data.data.accessToken);
-      console.log(getAccessToken());
       SecureStore.setItemAsync("refreshToken", res.data.data.refreshToken);
       router.replace("/(auth)/set-profile");
       useUserSetProfile.setState((state) => ({
@@ -70,4 +69,4 @@ const googleRegsiter = async () => {
   }
 };
 
-export { googleRegsiter };
+export { googleRegister };
