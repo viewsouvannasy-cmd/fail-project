@@ -33,7 +33,7 @@ const connectDB = async (retry = 0) => {
     }
 
     await sleep(5000);
-    connectDB(retry + 1);
+    await connectDB(retry + 1);
   }
 };
 

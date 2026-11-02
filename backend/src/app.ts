@@ -16,7 +16,7 @@ const app = express();
 
 app.use(express.json());
 
-app.get("/healthz", (req, res) => res.status(200).send("Ready"));
+app.get("/health", (req, res) => res.status(200).send("ok"));
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/oauth", oauthRoute);
