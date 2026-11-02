@@ -19,61 +19,65 @@ const googleRegister = async (
   res: Response,
   next: NextFunction,
 ) => {
-  const authHeader = req.headers["authorization"];
+  try {
+    const authHeader = req.headers["authorization"];
 
-  if (!authHeader) {
-    return res.status(401).json({
-      ok_verify_token: false,
-      msg: "no have token in auth header",
-      data: "",
+    if (!authHeader) {
+      return res.status(401).json({
+        ok_verify_token: false,
+        msg: "no have token in auth header",
+        data: "",
+      });
+    }
+
+    const idToken = authHeader.split(" ")[1];
+
+    if (!idToken) {
+      return res.status(401).json({
+        ok_verify_token: false,
+        msg: "no token provided",
+        data: "",
+      });
+    }
+
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: [
+        getEnv("GOOGLE_CLIENT_WEB_ID"),
+        getEnv("GOOGLE_CLIENT_IOS_ID"),
+      ],
     });
-  }
 
-  const idToken = authHeader.split(" ")[1];
+    const payload = ticket.getPayload();
 
-  if (!idToken) {
-    return res.status(401).json({
-      ok_verify_token: false,
-      msg: "no token provided",
-      data: "",
-    });
-  }
-
-  const ticket = await client.verifyIdToken({
-    idToken,
-    audience: [getEnv("GOOGLE_CLIENT_WEB_ID"), getEnv("GOOGLE_CLIENT_IOS_ID")],
-  });
-
-  const payload = ticket.getPayload();
-
-  // find existing user
-  const [findUser] = (await sql`
+    // find existing user
+    const [findUser] = (await sql`
   SELECT 
     user_id
   FROM users
   WHERE user_email = ${payload?.email}
   `) as { user_id: number }[];
 
-  if (findUser) {
-    const refreshToken = generateRefreshToken(findUser.user_id);
-    const accesstoken = generateAccessToken(findUser.user_id);
+    if (findUser) {
+      const refreshToken = generateRefreshToken(findUser.user_id);
+      const accesstoken = generateAccessToken(findUser.user_id);
 
-    // hash refresh token
-    const hashRefreshToken = await bcrypt.hash(refreshToken, 10);
-    await sql`
+      // hash refresh token
+      const hashRefreshToken = await bcrypt.hash(refreshToken, 10);
+      await sql`
     UPDATE users 
     SET refresh_token = ${hashRefreshToken}
     WHERE user_id = ${findUser.user_id}
     `;
 
-    return res.status(200).json({
-      ok: true,
-      msg: "register success",
-      data: { isNewUser: false, refreshToken, accesstoken },
-    });
-  }
+      return res.status(200).json({
+        ok: true,
+        msg: "register success",
+        data: { isNewUser: false, refreshToken, accesstoken },
+      });
+    }
 
-  const [results] = (await sql`
+    const [results] = (await sql`
   INSERT INTO users (user_name, user_email, avatar, bg, profile_url, image_id, refresh_token)
     VALUES (
     ${payload?.name},
@@ -87,29 +91,28 @@ const googleRegister = async (
     RETURNING user_id, user_name
   `) as { user_id: number; user_name: string }[];
 
-  const refreshToken = generateRefreshToken(results.user_id);
-  const accesstoken = generateAccessToken(results.user_id);
+    const refreshToken = generateRefreshToken(results.user_id);
+    const accesstoken = generateAccessToken(results.user_id);
 
-  // hash refresh token
-  const hashRefreshToken = await bcrypt.hash(refreshToken, 10);
+    // hash refresh token
+    const hashRefreshToken = await bcrypt.hash(refreshToken, 10);
 
-  await sql`
+    await sql`
   UPDATE users 
   SET refresh_token = ${hashRefreshToken}
   WHERE user_id = ${results.user_id}
   `;
 
-  res.status(200).json({
-    ok: true,
-    msg: "register success",
-    data: {
-      user_name: results.user_name,
-      isNewUser: true,
-      refreshToken,
-      accesstoken,
-    },
-  });
-  try {
+    res.status(200).json({
+      ok: true,
+      msg: "register success",
+      data: {
+        user_name: results.user_name,
+        isNewUser: true,
+        refreshToken,
+        accesstoken,
+      },
+    });
   } catch (error) {
     next(error);
   }

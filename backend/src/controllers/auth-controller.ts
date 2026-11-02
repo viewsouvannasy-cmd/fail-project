@@ -15,37 +15,37 @@ import {
 import type { Request, Response, NextFunction } from "express";
 import type { JwtPayload } from "jsonwebtoken";
 
-export const SignupAndLoginWithEmail = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const { user_email } = req.body;
+//  const SignupAndLoginWithEmail = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction,
+// ) => {
+//   try {
+//     const { user_email } = req.body;
 
-    // find user
-    const [findUser] = (await sql`
-    SELECT 
-    user_id 
-    FROM users
-    WHERE user_email = ${user_email}
-    `) as { user_id: number }[];
-    if (!findUser) {
-      res.status(401).json({ ok: false, msg: "user is not found", data: "" });
-    }
+//     // find user
+//     const [findUser] = (await sql`
+//     SELECT
+//     user_id
+//     FROM users
+//     WHERE user_email = ${user_email}
+//     `) as { user_id: number }[];
+//     if (!findUser) {
+//       res.status(401).json({ ok: false, msg: "user is not found", data: "" });
+//     }
 
-    const accessToken = generateAccessToken(findUser.user_id);
-    const refreshToken = generateRefreshToken(findUser.user_id);
+//     const accessToken = generateAccessToken(findUser.user_id);
+//     const refreshToken = generateRefreshToken(findUser.user_id);
 
-    res.status(200).json({
-      ok: true,
-      msg: "Login Success",
-      data: { accessToken, refreshToken },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+//     res.status(200).json({
+//       ok: true,
+//       msg: "Login Success",
+//       data: { accessToken, refreshToken },
+//     });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const isUserLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -65,13 +65,16 @@ const isUserLogin = async (req: Request, res: Response, next: NextFunction) => {
         .json({ ok: false, msg: "no token provided", data: "" });
     }
 
-    const payload = jwt.verify(
-      clientRefreshToken,
-      getEnv("REFRESH_TOKEN_SECRET"),
-    ) as JwtPayload;
-
-    if (!payload) {
-      return res.status(401).json({ ok: false, msg: "invalid", data: "" });
+    let payload: JwtPayload;
+    try {
+      payload = jwt.verify(
+        clientRefreshToken,
+        getEnv("REFRESH_TOKEN_SECRET"),
+      ) as JwtPayload;
+    } catch (error) {
+      return res
+        .status(401)
+        .json({ ok: false, msg: "token invalid", data: "" });
     }
 
     // find user
@@ -82,9 +85,10 @@ const isUserLogin = async (req: Request, res: Response, next: NextFunction) => {
     FROM users
     WHERE user_id = ${payload.user_id}
     `) as { user_id: number; refresh_token: string }[];
-
     if (!findUser) {
-      return res.status(401).json({ ok: false, msg: "invalid", data: "" });
+      return res
+        .status(401)
+        .json({ ok: false, msg: "user not found", data: "" });
     }
 
     const compareRefreshToken = await bcrypt.compare(
