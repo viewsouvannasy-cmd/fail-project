@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { View, useColorScheme } from "react-native";
 import { Redirect } from "expo-router";
 import { isUserLogin } from "@/store/auth/auth-func";
 import { useEffect, useState } from "react";
@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import { SamePointLoader } from "@/components/load-state/SamePointLoader";
 
 const index = () => {
+  const colorScheme = useColorScheme();
+
   const [isLogin, setIsLogin] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -30,8 +32,11 @@ const index = () => {
   }
 
   return (
-    <View className="flex-1 items-center justify-center bg-background">
-      <SamePointLoader size={100} />
+    <View className="items-center justify-center flex-1 bg-background">
+      <SamePointLoader
+        size={100}
+        color={colorScheme === "dark" ? "#fff" : "000"}
+      />
     </View>
   );
 };
