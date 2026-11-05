@@ -20,17 +20,6 @@ export default function _layout() {
         <NativeTabs.Trigger.Label>Project</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
-      <NativeTabs.Trigger name="chat">
-        <NativeTabs.Trigger.Icon
-          sf={{
-            default: "message",
-            selected: "message.fill",
-          }}
-          md="chat"
-        />
-        <NativeTabs.Trigger.Label>Chat</NativeTabs.Trigger.Label>
-      </NativeTabs.Trigger>
-
       <NativeTabs.Trigger name="inbox">
         <NativeTabs.Trigger.Icon
           sf={{

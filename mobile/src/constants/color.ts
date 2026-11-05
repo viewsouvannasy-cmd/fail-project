@@ -124,3 +124,18 @@ export const BACKGROUND_COLOR = [
 ] as const;
 
 export type BackgroundColor = (typeof BACKGROUND_COLOR)[number];
+
+export const CARD_COLOR = [
+  "#DDE7FF",
+  "#DFF7E8",
+  "#FFE1E1",
+  "#EDE2FF",
+  "#FFF0D6",
+  "#DDF7F4",
+  "#FFE4F0",
+  "#E4E7EB",
+  "#F0E7D8",
+  "#E1F0FF",
+] as const;
+
+export type CardBgColor = (typeof CARD_COLOR)[number];
