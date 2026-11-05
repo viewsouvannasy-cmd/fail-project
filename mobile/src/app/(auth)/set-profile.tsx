@@ -4,8 +4,8 @@ import { Text, Pressable, useColorScheme } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 // components
-import { ProfileSection } from "@/components/app/(auth)/set-profile/ProfileSection";
-import { SelectAvatarSection } from "@/components/app/(auth)/set-profile/SelectAvatarSection";
+import { ProfileSection } from "@/components/app/auth/set-profile/ProfileSection";
+import { SelectAvatarSection } from "@/components/app/auth/set-profile/SelectAvatarSection";
 import { SpinnerLoad } from "@/components/load-state/sipnnerLoad";
 
 // context
@@ -30,7 +30,7 @@ const SetProfile = () => {
   }
 
   return (
-    <SafeAreaView className="bg-background flex-1">
+    <SafeAreaView className="flex-1 bg-background">
       <KeyboardAwareScrollView
         bottomOffset={30}
         contentContainerClassName="justify-end flex-1 p-4 gap-5"
@@ -42,7 +42,7 @@ const SetProfile = () => {
           className="p-3 active:bg-background-inverse/70 bg-background-inverse rounded-[10px] items-center"
         >
           {!isPending ? (
-            <Text className="text-foreground-inverse text-lg">Done</Text>
+            <Text className="text-lg text-foreground-inverse">Done</Text>
           ) : (
             <SpinnerLoad
               size={24}

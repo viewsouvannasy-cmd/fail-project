@@ -24,6 +24,7 @@
   /* text */
   --foreground: 0 0 0;
   --foreground-secondary: 120 120 120;
+  --foreground-secondary-strong: 70 70 70;
   --foreground-inverse: 255 255 255;
 }
 
@@ -46,6 +47,7 @@
     /* text */
     --foreground: 255 255 255;
     --foreground-secondary: 120 120 120;
+    --foreground-secondary-strong: 70 70 70;
     --foreground-inverse: 0 0 0;
   }
 }

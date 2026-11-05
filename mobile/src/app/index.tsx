@@ -35,7 +35,7 @@ const index = () => {
     <View className="items-center justify-center flex-1 bg-background">
       <SamePointLoader
         size={100}
-        color={colorScheme === "dark" ? "#fff" : "000"}
+        color={colorScheme === "dark" ? "#fff" : "#000"}
       />
     </View>
   );

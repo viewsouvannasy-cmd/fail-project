@@ -33,18 +33,18 @@ export function SelectAvatarSection() {
 
   return (
     <View className="bg-card border-border border rounded-[20px] overflow-hidden">
-      <View className="flex-row  border-b border-border">
+      <View className="flex-row border-b border-border">
         <Pressable
           onPress={() => setOnSection("avatar")}
           className={`flex-1 p-3 ${onSection === "avatar" ? "bg-accent-secondary" : ""}`}
         >
-          <Text className="text-lg text-foreground  text-center ">Avatar</Text>
+          <Text className="text-lg text-center text-foreground ">Avatar</Text>
         </Pressable>
         <Pressable
           onPress={() => setOnSection("background")}
           className={`flex-1 p-3 ${onSection === "background" ? "bg-accent-secondary" : ""}`}
         >
-          <Text className="text-lg text-foreground  text-center">
+          <Text className="text-lg text-center text-foreground">
             background
           </Text>
         </Pressable>
@@ -60,12 +60,12 @@ export function SelectAvatarSection() {
               <View key={indexRow} className="flex-row gap-3">
                 {row.map((item, index) =>
                   item === null ? (
-                    <View key={index} className="aspect-square flex-1" />
+                    <View key={index} className="flex-1 aspect-square" />
                   ) : (
                     <Pressable
                       onPress={() => setDataForm("avatar", item)}
                       key={index}
-                      className=" rounded-full overflow-hidden flex-1 aspect-square items-center justify-center"
+                      className="items-center justify-center flex-1 overflow-hidden rounded-full  aspect-square"
                       style={{ backgroundColor: userForm.bg }}
                     >
                       <Avatar avatar={item} size={50} />
@@ -87,12 +87,12 @@ export function SelectAvatarSection() {
               <View key={indexRow} className="flex-row gap-3">
                 {row.map((item, index) => {
                   return item === null ? (
-                    <View key={index} className="aspect-square flex-1" />
+                    <View key={index} className="flex-1 aspect-square" />
                   ) : (
                     <Pressable
                       onPress={() => setDataForm("bg", item)}
                       key={index}
-                      className="rounded-full  overflow-hidden flex-1 aspect-square items-center justify-center"
+                      className="items-center justify-center flex-1 overflow-hidden rounded-full aspect-square"
                       style={{ backgroundColor: item }}
                     />
                   );
