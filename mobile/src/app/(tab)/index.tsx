@@ -14,8 +14,6 @@ import { Avatar } from "@/components/avatar/Avatar";
 import { ItemProject } from "@/components/app/tab/project/ItemProject";
 
 import type { CardBgColor } from "@/constants/color";
-import { useState } from "react";
-
 export type Project = {
   emoji: string;
   project_name: string;
