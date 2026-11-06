@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "SamePoint",
-    "slug": "mobile",
+    "slug": "samepoint",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon/same-point-logo.png",
@@ -9,7 +9,7 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/icon/same-point-logo.png",
-      "bundleIdentifier": "com.anonymous.mobile",
+      "bundleIdentifier": "com.view.samepoint",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
@@ -29,7 +29,7 @@
         "foregroundImage": "./assets/icon/same-point-logo.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.mobile"
+      "package": "com.view.samepoint"
     },
     "web": {
       "output": "server",
@@ -58,6 +58,16 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "cc07fc5e-c4b3-4c73-a8df-61d8e42a9243"
+      }
     }
   }
 }

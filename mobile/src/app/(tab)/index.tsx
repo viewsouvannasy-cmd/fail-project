@@ -1,5 +1,5 @@
 // library
-import { useRef } from "react";
+
 import { Text, View, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Animated, {
@@ -14,7 +14,6 @@ import { Avatar } from "@/components/avatar/Avatar";
 import { ItemProject } from "@/components/app/tab/project/ItemProject";
 
 import type { CardBgColor } from "@/constants/color";
-
 export type Project = {
   emoji: string;
   project_name: string;
@@ -74,33 +73,70 @@ const data: Project[] = [
     bg: "#DDF7F4",
   },
 ];
+
 export default function App() {
+  const searchHight = 50;
+
+  const translateY = useSharedValue(0);
+  const lastY = useSharedValue(0);
+
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (e) => {
+      const y = Math.max(0, e.contentOffset.y);
+      const diff = y - lastY.value;
+      translateY.value = clamp(translateY.value - diff, -searchHight, 0);
+      lastY.value = y;
+    },
+  });
+
+  const searchStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+    opacity: 1 + translateY.value / searchHight,
+  }));
+
   return (
-    <SafeAreaView className="flex-1 gap-5 p-5 bg-background" edges={["top"]}>
-      <View className="flex-row items-center justify-between ">
+    <SafeAreaView className="flex-1 p-5 bg-background" edges={["top"]}>
+      <View className="flex-row items-center justify-between pb-2 ">
         <Text className="text-4xl font-semibold text-foreground">Project</Text>
         <View className="items-center justify-center w-[40px] overflow-hidden rounded-full h-[40px] bg-emerald-200">
           <Avatar avatar="pixel-cat" size={40} />
         </View>
       </View>
 
-      <Animated.FlatList
-        data={data}
+      <View className="flex-1 mt-2 overflow-hidden ">
+        <Animated.View
+          className="bg-background"
 
-        contentContainerClassName="gap-5 grow"
-        ListHeaderComponent={
-          <View>
-            <TextInput
-              className="p-4 rounded-full border-border bg-background-muted"
-              placeholderTextColor="rgb(120,120,120)"
-              placeholder="Search..."
-            />
-          </View>
-        }
-        ListFooterComponent={<View className="mb-20"></View>}
-        keyExtractor={(_, index) => String(index)}
-        renderItem={({ item }) => <ItemProject item={item} />}
-      />
+          style={[
+            {
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 10,
+              height: searchHight,
+            },
+            searchStyle,
+          ]}
+        >
+          <TextInput
+            className="p-4 rounded-full border-border bg-background-muted"
+            placeholderTextColor="rgb(120,120,120)"
+            placeholder="Search..."
+          />
+        </Animated.View>
+
+        <Animated.FlatList
+          data={data}
+          showsVerticalScrollIndicator={false}
+          contentContainerClassName="gap-5 grow pt-[60px]"
+          ListFooterComponent={<View className="mb-20"></View>}
+          keyExtractor={(_, index) => String(index)}
+          renderItem={({ item }) => <ItemProject item={item} />}
+          scrollEventThrottle={16}
+          onScroll={onScroll}
+        />
+      </View>
     </SafeAreaView>
   );
 }
